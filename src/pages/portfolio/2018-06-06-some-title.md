@@ -1,5 +1,5 @@
 ---
-templateKey: portfolioitems
+templateKey: portfolio-item
 title: Some Title
 date: '2018-06-06T23:09:03+01:00'
 description: Here is a brief description

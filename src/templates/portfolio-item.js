@@ -4,21 +4,24 @@ import { kebabCase } from 'lodash'
 import Helmet from 'react-helmet'
 import Link from 'gatsby-link'
 import Content, { HTMLContent } from '../components/Content'
+import _ from 'lodash';
 
-export const BlogPostTemplate = ({
-  content,
-  contentComponent,
-  description,
-  tags,
+export const PortfolioItemTemplate = ({
   title,
+  description,
+  html,
+  images,
+  tags,
+  contentComponent,
   helmet,
-  id
+  content
 }) => {
   const PostContent = contentComponent || Content
-  console.log('id', id);
+  console.log("images", images);
   return (
     <section className="section">
       {helmet || ''}
+      
       <div className="container content">
         <div className="columns">
           <div className="column is-10 is-offset-1">
@@ -26,6 +29,15 @@ export const BlogPostTemplate = ({
               {title}
             </h1>
             <p>{description}</p>
+            {_.map(images, (image, index) => {
+                return (
+                <div key={index}>
+                  <img src={image.image} />
+                  {image.caption}
+                </div> 
+                )
+            })
+            }
             <PostContent content={content} />
             {tags && tags.length ? (
               <div style={{ marginTop: `4rem` }}>
@@ -46,49 +58,56 @@ export const BlogPostTemplate = ({
   )
 }
 
-BlogPostTemplate.propTypes = {
+PortfolioItemTemplate.propTypes = {
   content: PropTypes.string.isRequired,
   contentComponent: PropTypes.func,
   description: PropTypes.string,
   title: PropTypes.string,
-  helmet: PropTypes.instanceOf(Helmet),
+  //helmet: PropTypes.instanceOf(Helmet),
+  images : PropTypes.arrayOf(PropTypes.shape({
+    image: PropTypes.string,
+    caption: PropTypes.string
+  }))
 }
 
-const BlogPost = ({ data }) => {
+const PortfolioItem = ({ data }) => {
   const { markdownRemark: post } = data
 
   return (
-    <BlogPostTemplate
+    <PortfolioItemTemplate
       content={post.html}
       contentComponent={HTMLContent}
       description={post.frontmatter.description}
-      helmet={<Helmet title={`${post.frontmatter.title} | Blog`} />}
+      helmet={<Helmet title={`${post.frontmatter.title} | Portfolio`} />}
       tags={post.frontmatter.tags}
       title={post.frontmatter.title}
       id={post.id}
+      images={post.frontmatter.images}
     />
   )
 }
 
-BlogPost.propTypes = {
+PortfolioItem.propTypes = {
   data: PropTypes.shape({
     markdownRemark: PropTypes.object,
   }),
 }
 
-export default BlogPost
+export default PortfolioItem;
 
 export const pageQuery = graphql`
-  query BlogPostByID($id: String!) {
+  query PortfolioItemById($id: String!) {
     markdownRemark(id: { eq: $id }) {
       id
       html
       frontmatter {
-        date(formatString: "MMMM DD, YYYY")
         title
         description
-        tags
-      }
+        images {
+          image
+          caption
+        }
+      }  
     }
   }
 `
