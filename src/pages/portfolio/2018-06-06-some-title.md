@@ -9,6 +9,7 @@ tags:
 images:
   - caption: Our Bex
     image: /img/bexcision-52-edit.jpg
-  - image: /img/bexcision-20-edit.jpg
+  - caption: The Bex 2
+    image: /img/bexcision-20-edit.jpg
 ---
 Woop **BODY**
